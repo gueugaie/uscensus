@@ -1,0 +1,70 @@
+<!doctype html>
+<html ng-app="UsCensusApp">
+  <head>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
+    <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.14.3.js"></script>
+    <script src="usCensus.js"></script>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+    	body {margin: 1em;}
+    </style>
+  </head>
+  <body>
+		<h1>US Census Average Age explorer</h1>
+		The coolest way (in under 7h) to explore average ages in the census' open data.
+		
+		<div ng-controller="ConfigurationController">
+		
+		<h2>Data exploration configuration</h2>		
+		Please configure the explorer : 
+		<div class="btn-group" uib-dropdown>
+	      <button id="tablesButton" type="button" class="btn btn-primary" uib-dropdown-toggle>
+	        Working on table: {{selectedTableName}} <span class="caret"></span>
+	      </button>
+		  <ul class="uib-dropdown-menu" role="menu" aria-labelledby="tablesButton">
+		  	<li role="menuitem" ng-repeat="tableName in tableNames"><a href="#" ng-click="didSelectTableName(tableName)">{{tableName}}</a></li>
+		  </ul>
+		</div>
+		
+		<div class="btn-group" uib-dropdown>
+	      <button id="categoriesButton" type="button" class="btn btn-primary" uib-dropdown-toggle>
+	        Average age by : {{selectedCategory}} <span class="caret"></span>
+	      </button>
+		  <ul class="uib-dropdown-menu" role="menu" aria-labelledby="categoriesButton">
+		  	<li role="menuitem" ng-repeat="category in categoryNames"><a href="#" ng-click="didSelectCategory(category)">{{category}}</a></li>
+		  </ul>
+		</div>
+		
+		
+		<h2>Results</h2>
+		
+		<span ng-show="loading">Loading...</span>
+		<table class="table table-stipped" style="max-width: 900px;" ng-show="loaded">
+			<thead>
+				<tr>
+					<th>{{selectedCategory}}</th>
+					<th>Number of people</th>
+					<th>Average age <span class="caret"></span></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="average in averages">
+					<td>{{average.category}}</td>
+					<td>{{average.numberOfPeople | number : 0}}</td>
+					<td>{{average.averageData | number : 2}}</td>
+				</tr>
+				<tr>
+					<td style="text-align: center;" colspan="3">
+						Showing result {{ startOffset + 1 }} to {{endOffset}} out of {{totalNumberOfResults}}
+						<br />
+					 	<uib-pagination total-items="totalNumberOfResults" ng-model="currentPage" ng-change="pageChanged()"
+					 		items-per-page="pageSize" max-size="10" boundary-links="true" 
+						 	class="pagination-sm" boundary-link-numbers="true" rotate="false" ></uib-pagination>
+				 	</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+  </body>
+</html>
